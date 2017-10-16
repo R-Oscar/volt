@@ -1,30 +1,66 @@
 import React from 'react';
 import axios from 'axios';
 import { Button, Modal, FormGroup, FormControl } from 'react-bootstrap';
+import CustomersCreateModal from './CustomersCreateModal';
+import CustomersEditModal from './CustomersEditModal';
+import CustomersDeleteModal from './CustomersDeleteModal';
 
 export default class Customers extends React.Component {
 	constructor(props) {
 		super(props);
+
 		this.state = {
-			showModal: false,
-			data: [],
-			name: '',
-			address: '',
-			phone: ''
+			showCreateModal: false,
+			showEditModal: false,
+			editModalData: {},
+			showDeleteModal: false,
+			deleteModalId: -1,
+			data: []
 		}
+
+		this.openCreateModal = this.openCreateModal.bind(this);
+		this.closeCreateModal = this.closeCreateModal.bind(this);
+		this.openEditModal = this.openEditModal.bind(this);
+		this.closeEditModal = this.closeEditModal.bind(this);
+		this.openDeleteModal = this.openDeleteModal.bind(this);
+		this.closeDeleteModal = this.closeDeleteModal.bind(this);
 	}
 
-	open() {
+	openCreateModal() {
 		this.setState({
-			...this.state,
-			showModal: true
+			showCreateModal: true
 		})
 	}
 
-	close() {
+	closeCreateModal() {
 		this.setState({
-			...this.state,
-			showModal: false
+			showCreateModal: false
+		})
+	}
+
+	openEditModal(editModalData) {
+		this.setState({
+			showEditModal: true,
+			editModalData
+		})
+	}
+
+	closeEditModal() {
+		this.setState({
+			showEditModal: false
+		})
+	}
+
+	openDeleteModal(deleteModalId) {
+		this.setState({
+			showDeleteModal: true,
+			deleteModalId
+		})
+	}
+
+	closeDeleteModal() {
+		this.setState({
+			showDeleteModal: false
 		})
 	}
 
@@ -39,40 +75,6 @@ export default class Customers extends React.Component {
 		  .catch((error) => console.log(error));
 	}
 
-	addCustomer(e) {
-		e.preventDefault();
-		axios.post('/api/customers', {
-			name: this.state.name,
-			address: this.state.address,
-			phone: this.state.phone
-		})
-		.then((response) => {
-			console.log(response);
-		})
-		.catch((error) => console.log(error));
-	}
-
-	nameChange(e) {
-		this.setState({
-			...this.state,
-			name: e.target.value
-		});
-	}
-
-	addressChange(e) {
-		this.setState({
-			...this.state,
-			address: e.target.value
-		});
-	}
-
-	phoneChange(e) {
-		this.setState({
-			...this.state,
-			phone: e.target.value
-		});
-	}
-
 	render() {
 		const {
 			data
@@ -81,41 +83,14 @@ export default class Customers extends React.Component {
 		return (
 			<div className="container">
 				<h1>Customer List</h1>
-				<Button onClick={e => this.open(e)}>Create</Button>
-
-				<Modal show={this.state.showModal} onHide={e => this.close(e)}>
-					<Modal.Header closeButton>
-						<Modal.Title>Add customer</Modal.Title>
-					</Modal.Header>
-					<Modal.Body>
-						<FormGroup controlId="name">
-							<FormControl name="name" 
-										type="text" 
-										placeholder="Enter the name" 
-										value={this.state.name}
-										onChange={e => this.nameChange(e)} />
-						</FormGroup>
-						<FormGroup controlId="address">
-							<FormControl name="address" 
-										type="text" 
-										placeholder="Enter the address"
-										value={this.state.address}
-										onChange={e => this.addressChange(e)} />
-						</FormGroup>
-						<FormGroup controlId="phone">
-							<FormControl name="phone" 
-										type="number" 
-										placeholder="Enter the phone"
-										value={this.state.phone}
-										onChange={e => this.phoneChange(e)} />
-						</FormGroup>
-					</Modal.Body>
-					<Modal.Footer>
-						<Button onClick={e => this.close(e)}>Close</Button>
-						<Button onClick={e => this.addCustomer(e)} type="submit" bsStyle="primary">Add</Button>
-					</Modal.Footer>
-				</Modal>
-
+				<Button onClick={this.openCreateModal}>Create</Button>
+				<CustomersCreateModal visible={this.state.showCreateModal} closeHandler={this.closeCreateModal} />
+				<CustomersEditModal visible={this.state.showEditModal} 
+									closeHandler={this.closeEditModal}
+									data={this.state.editModalData} />
+				<CustomersDeleteModal visible={this.state.showDeleteModal}
+									closeHandler={this.closeDeleteModal}
+									id={this.state.deleteModalId} />
 				<table className="table">
 					<thead>
 						<tr>
@@ -123,15 +98,32 @@ export default class Customers extends React.Component {
 							<th>Name</th>
 							<th>Address</th>
 							<th>Phone</th>
+							<th>Actions</th>
 						</tr>
 					</thead>
 					<tbody>
 						{data.map((element, index) => {
-							return <tr key={element.id}>
+							const {
+								id,
+								name,
+								address,
+								phone
+							} = element
+
+							return <tr key={id}>
 										<td>{index + 1}</td>
-										<td>{element.name}</td>
-										<td>{element.address}</td>
-										<td>{element.phone}</td>
+										<td>{name}</td>
+										<td>{address}</td>
+										<td>{phone}</td>
+										<td>
+											<Button onClick={() => this.openEditModal({
+												id,
+												name,
+												address,
+												phone
+											})}>Edit</Button>
+											<Button onClick={() => this.openDeleteModal(id)}>Remove</Button>
+										</td>
 									</tr>
 						})}
 					</tbody>
