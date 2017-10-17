@@ -19,7 +19,17 @@ export default class ModalWindow extends React.Component {
 		visible: PropTypes.bool.isRequired,
 		remove: PropTypes.bool.isRequired,
 		action: PropTypes.func.isRequired,
-		fields: PropTypes.array.isRequired
+		fields: PropTypes.array,
+		closeHandler: PropTypes.func.isRequired
+	}
+
+	componentWillReceiveProps(props) {
+		let keys = props.fields.map(element => element.title);
+		let values = props.fields.map(element => element.value);
+
+		let result = {};
+		keys.forEach((key, i) => result[key] = values[i]);
+		this.setState(result);
 	}
 
 	handleInputChange(e) {
@@ -33,11 +43,12 @@ export default class ModalWindow extends React.Component {
 			visible,
 			remove,
 			action,
-			fields
+			fields,
+			closeHandler
 		} = this.props;
 
 		return (
-			<Modal show={visible}>
+			<Modal show={visible} onHide={closeHandler}>
 				<Modal.Header closeButton>
 					<Modal.Title>Modal title</Modal.Title>
 				</Modal.Header>
@@ -61,11 +72,11 @@ export default class ModalWindow extends React.Component {
 				{remove ? (
 					<Modal.Footer>
 						<Button>No</Button>
-						<Button bsStyle="danger">Yes</Button>
+						<Button bsStyle="danger" onClick={action}>Yes</Button>
 					</Modal.Footer>
 				) : (
 					<Modal.Footer>
-						<Button>Cancel</Button>
+						<Button onClick={closeHandler}>Cancel</Button>
 						<Button bsStyle="primary" onClick={() => action(this.state)}>OK</Button>
 					</Modal.Footer>
 				)}

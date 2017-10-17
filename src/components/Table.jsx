@@ -2,10 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
 
-const Table = ({ entries, columns }) => {
+const Table = ({ entries, columns, openModal }) => {
 	return (
 		<div>
-			<Button>Create</Button>
 			<table className="table">
 				<thead>
 					<tr>
@@ -31,13 +30,8 @@ const Table = ({ entries, columns }) => {
 									<td>{address}</td>
 									<td>{phone}</td>
 									<td>
-										<Button onClick={() => this.openEditModal({
-											id,
-											name,
-											address,
-											phone
-										})}>Edit</Button>
-										<Button onClick={() => this.openDeleteModal(id)}>Remove</Button>
+										<Button onClick={() => openModal('edit', id)}>Edit</Button>
+										<Button onClick={() => openModal('remove', id)}>Remove</Button>
 									</td>
 								</tr>
 					})}
@@ -49,7 +43,8 @@ const Table = ({ entries, columns }) => {
 
 Table.propTypes = {
 	entries: PropTypes.array.isRequired,
-	columns: PropTypes.array.isRequired
+	columns: PropTypes.array.isRequired,
+	openModal: PropTypes.func.isRequired
 }
 
 export default Table;
