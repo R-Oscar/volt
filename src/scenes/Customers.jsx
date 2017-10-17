@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
-import Table from './Table';
-import ModalWindow from './ModalWindow';
+import Table from '../components/Table';
+import ModalWindow from '../components/ModalWindow';
 import { Button } from 'react-bootstrap';
 
 export default class Customers extends React.Component {
@@ -73,6 +73,8 @@ export default class Customers extends React.Component {
 			data,
 			userId
 		} = this.state;
+
+		console.log(data);
 
 		return (
 			<div className="container">

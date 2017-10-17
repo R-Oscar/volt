@@ -3,8 +3,8 @@ import { render } from 'react-dom';
 import { Link, Route, BrowserRouter, Switch } from 'react-router-dom';
 import { Navbar, Nav, NavItem } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
-import Customers from './components/Customers';
-import Products from './components/Products';
+import Customers from './scenes/Customers';
+import Products from './scenes/Products';
 
 import 'react-select/dist/react-select.css';
 
