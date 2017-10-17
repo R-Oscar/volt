@@ -75,8 +75,12 @@ export default class Customers extends React.Component {
 		  .catch((error) => console.log(error));
 	}
 
-	create() {
-		console.log('todo');
+	createHandler(data) {
+		axios.post('/api/customers', data)
+		.then((response) => {
+			location.reload();
+		})
+		.catch((error) => console.log(error));
 	}
 
 	render() {
@@ -100,11 +104,24 @@ export default class Customers extends React.Component {
 								  	id: 2,
 								  	title: "Phone"
 								  }]} />
-				<ModalWindow visible={true} remove={false} action={this.create} fields={{
-					name: '',
-					address: '',
-					phone: ''
-				}} />
+				<ModalWindow visible={true} remove={false} action={this.createHandler} fields={[
+					{
+						id: 0,
+						title: 'name',
+						value: ''
+					},
+					{
+						id: 1,
+						title: 'address',
+						value: ''
+					},
+					{
+						id: 2,
+						title: 'phone',
+						value: ''
+					}
+				]} />
+					
 			</div>
 		)
 	}
