@@ -1,8 +1,9 @@
 import React from 'react';
 import axios from 'axios';
-import Table from '../components/Table';
-import ModalWindow from '../components/ModalWindow';
+import Table from '../../components/Table';
+import ModalWindow from '../../components/ModalWindow';
 import { Button } from 'react-bootstrap';
+import model from './services/customer-columns';
 
 export default class Customers extends React.Component {
 	constructor(props) {
@@ -74,68 +75,34 @@ export default class Customers extends React.Component {
 			userId
 		} = this.state;
 
-		console.log(data);
-
 		return (
 			<div className="container">
 				<h1>Customer List</h1>
 				<Button onClick={() => this.setState({activeModal: 'create'})}>Create</Button>
 				<Table entries={this.state.data} 
-						columns={[{
-									id: 0,
-									title: "Name"
-								  },
-								  {
-								  	id: 1,
-								  	title: "Address"
-								  },
-								  {
-								  	id: 2,
-								  	title: "Phone"
-								  }]}
+						columns={model}
 						openModal={this.openModal} />
 				<ModalWindow visible={activeModal === 'create'} 
 							remove={false} 
 							action={this.createHandler} 
-							fields={[
-								{
-									id: 0,
-									title: 'name',
-									value: ''
-								},
-								{
-									id: 1,
-									title: 'address',
-									value: ''
-								},
-								{
-									id: 2,
-									title: 'phone',
+							fields={model.map(element => {
+								return {
+									...element,
 									value: ''
 								}
-							]} 
+							})} 
 							closeHandler={this.closeModal} />
 
 				<ModalWindow visible={activeModal === 'edit'}
 							remove={false}
 							action={this.editHandler}
-							fields={[
-								{
-									id: 0,
-									title: 'name',
-									value: this.state.userId !== -1 ? data.find(item => item.id === userId).name : ''
-								},
-								{
-									id: 1,
-									title: 'address',
-									value: this.state.userId !== -1 ? data.find(item => item.id === userId).address : ''
-								},
-								{
-									id: 2,
-									title: 'phone',
-									value: this.state.userId !== -1 ? data.find(item => item.id === userId).phone : ''
+							fields={model.map(element => {
+								return {
+									id: element.id,
+									title: element.title.toLowerCase(),
+									value: userId !== -1 ? data.find(item => item.id === userId)[element.title.toLowerCase()] : ''
 								}
-							]}
+							})}
 							closeHandler={this.closeModal} />
 					
 				<ModalWindow visible={activeModal === 'remove'}
