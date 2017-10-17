@@ -4,6 +4,7 @@ import { Button, Modal, FormGroup, FormControl } from 'react-bootstrap';
 import CustomersCreateModal from './CustomersCreateModal';
 import CustomersEditModal from './CustomersEditModal';
 import CustomersDeleteModal from './CustomersDeleteModal';
+import Table from './Table';
 
 export default class Customers extends React.Component {
 	constructor(props) {
@@ -68,7 +69,6 @@ export default class Customers extends React.Component {
 		axios.get('/api/customers')
 		  .then((response) => {
 		    this.setState({
-		    	...this.state,
 		    	data: response.data
 		    })
 		  })
@@ -83,6 +83,19 @@ export default class Customers extends React.Component {
 		return (
 			<div className="container">
 				<h1>Customer List</h1>
+				<Table entries={this.state.data} 
+						columns={[{
+									id: 0,
+									title: "Name"
+								  },
+								  {
+								  	id: 1,
+								  	title: "Address"
+								  },
+								  {
+								  	id: 2,
+								  	title: "Phone"
+								  }]} />
 				<Button onClick={this.openCreateModal}>Create</Button>
 				<CustomersCreateModal visible={this.state.showCreateModal} closeHandler={this.closeCreateModal} />
 				<CustomersEditModal visible={this.state.showEditModal} 
