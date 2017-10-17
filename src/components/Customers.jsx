@@ -1,10 +1,10 @@
 import React from 'react';
 import axios from 'axios';
-import { Button, Modal, FormGroup, FormControl } from 'react-bootstrap';
 import CustomersCreateModal from './CustomersCreateModal';
 import CustomersEditModal from './CustomersEditModal';
 import CustomersDeleteModal from './CustomersDeleteModal';
 import Table from './Table';
+import ModalWindow from './ModalWindow';
 
 export default class Customers extends React.Component {
 	constructor(props) {
@@ -75,6 +75,10 @@ export default class Customers extends React.Component {
 		  .catch((error) => console.log(error));
 	}
 
+	create() {
+		console.log('todo');
+	}
+
 	render() {
 		const {
 			data
@@ -96,51 +100,11 @@ export default class Customers extends React.Component {
 								  	id: 2,
 								  	title: "Phone"
 								  }]} />
-				<Button onClick={this.openCreateModal}>Create</Button>
-				<CustomersCreateModal visible={this.state.showCreateModal} closeHandler={this.closeCreateModal} />
-				<CustomersEditModal visible={this.state.showEditModal} 
-									closeHandler={this.closeEditModal}
-									data={this.state.editModalData} />
-				<CustomersDeleteModal visible={this.state.showDeleteModal}
-									closeHandler={this.closeDeleteModal}
-									id={this.state.deleteModalId} />
-				<table className="table">
-					<thead>
-						<tr>
-							<th>#</th>
-							<th>Name</th>
-							<th>Address</th>
-							<th>Phone</th>
-							<th>Actions</th>
-						</tr>
-					</thead>
-					<tbody>
-						{data.map((element, index) => {
-							const {
-								id,
-								name,
-								address,
-								phone
-							} = element
-
-							return <tr key={id}>
-										<td>{index + 1}</td>
-										<td>{name}</td>
-										<td>{address}</td>
-										<td>{phone}</td>
-										<td>
-											<Button onClick={() => this.openEditModal({
-												id,
-												name,
-												address,
-												phone
-											})}>Edit</Button>
-											<Button onClick={() => this.openDeleteModal(id)}>Remove</Button>
-										</td>
-									</tr>
-						})}
-					</tbody>
-				</table>
+				<ModalWindow visible={true} remove={false} action={this.create} fields={{
+					name: '',
+					address: '',
+					phone: ''
+				}} />
 			</div>
 		)
 	}
