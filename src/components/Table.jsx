@@ -25,8 +25,8 @@ const Table = ({ entries, columns, openModal }) => {
 									})}
 
 									<td>
-										<Button onClick={() => openModal('edit', id)}>Edit</Button>
-										<Button onClick={() => openModal('remove', id)}>Remove</Button>
+										<Button onClick={() => openModal('edit', element.id)}>Edit</Button>
+										<Button onClick={() => openModal('remove', element.id)}>Remove</Button>
 									</td>
 								</tr>
 					})}
