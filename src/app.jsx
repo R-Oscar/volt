@@ -4,7 +4,7 @@ import { Link, Route, BrowserRouter, Switch } from 'react-router-dom';
 import { Navbar, Nav, NavItem } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import Customers from './scenes/Customers/Customers';
-import Products from './scenes/Products';
+import Products from './scenes/Products/Products';
 
 import 'react-select/dist/react-select.css';
 

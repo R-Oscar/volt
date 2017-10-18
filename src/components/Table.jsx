@@ -17,18 +17,13 @@ const Table = ({ entries, columns, openModal }) => {
 				</thead>
 				<tbody>
 					{entries.map((element, index) => {
-						const {
-							id,
-							name,
-							address,
-							phone
-						} = element
-
-						return <tr key={id}>
+						return <tr key={element.id}>
 									<td>{index + 1}</td>
-									<td>{name}</td>
-									<td>{address}</td>
-									<td>{phone}</td>
+
+									{columns.map(col => {
+										return <td key={col.id}>{element[col.title.toLowerCase()]}</td>
+									})}
+
 									<td>
 										<Button onClick={() => openModal('edit', id)}>Edit</Button>
 										<Button onClick={() => openModal('remove', id)}>Remove</Button>

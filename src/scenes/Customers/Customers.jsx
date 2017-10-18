@@ -77,9 +77,9 @@ export default class Customers extends React.Component {
 
 		return (
 			<div className="container">
-				<h1>Customer List</h1>
+				<h1>Customer list</h1>
 				<Button onClick={() => this.setState({activeModal: 'create'})}>Create</Button>
-				<Table entries={this.state.data} 
+				<Table entries={data} 
 						columns={model}
 						openModal={this.openModal} />
 				<ModalWindow visible={activeModal === 'create'} 
