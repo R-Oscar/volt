@@ -6,6 +6,20 @@ import { Button } from 'react-bootstrap';
 import model from './services/product-columns';
 
 export default class Products extends Component {
+	url = '/api/products/';
+
+	refreshData() {
+		axios.get(this.url)
+		.then((response) => {
+			this.setState({
+				data: response.data,
+				activeModal: '',
+				productId: -1
+			})
+		})
+		.catch((error) => console.log(error));
+	}
+
 	constructor(props) {
 		super(props);
 
@@ -14,6 +28,7 @@ export default class Products extends Component {
 			activeModal: '',
 			productId: -1
 		}
+		this.createHandler = this.createHandler.bind(this);
 		this.closeModal = this.closeModal.bind(this);
 		this.openModal = this.openModal.bind(this);
 		this.editHandler = this.editHandler.bind(this);
@@ -21,17 +36,17 @@ export default class Products extends Component {
 	}
 
 	editHandler(data) {
-		axios.put(`/api/products/${this.state.productId}`, data)
+		axios.put(this.url + this.state.productId, data)
 		.then((response) => {
-			location.reload();
+			this.refreshData();
 		})
 		.catch((error) => console.log(error));
 	}
 
 	removeHandler() {
-		axios.delete(`/api/products/${this.state.productId}`)
+		axios.delete(this.url + this.state.productId)
 		.then((response) => {
-			location.reload();
+			this.refreshData();
 		})
 		.catch((error) => console.log(error));
 	}
@@ -44,7 +59,8 @@ export default class Products extends Component {
 	}
 
 	componentDidMount() {
-		axios.get('/api/products')
+		document.title = "Products";
+		axios.get(this.url)
 		.then((response) => {
 			this.setState({
 				data: response.data
@@ -54,9 +70,9 @@ export default class Products extends Component {
 	}
 
 	createHandler(data) {
-		axios.post('/api/products', data)
+		axios.post(this.url, data)
 		.then((response) => {
-			location.reload();
+			this.refreshData();
 		})
 		.catch((error) => console.log(error));
 	}
@@ -86,7 +102,6 @@ export default class Products extends Component {
 							remove={false} 
 							action={this.createHandler} 
 							fields={model.map(element => {
-								console.log(element);
 								return {
 									id: element.id,
 									title: element.title.toLowerCase(),

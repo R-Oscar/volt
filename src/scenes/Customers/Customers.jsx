@@ -6,6 +6,20 @@ import { Button } from 'react-bootstrap';
 import model from './services/customer-columns';
 
 export default class Customers extends React.Component {
+	url = '/api/customers/';
+
+	refreshData() {
+		axios.get(this.url)
+		.then((response) => {
+			this.setState({
+				data: response.data,
+				activeModal: '',
+				userId: -1
+			})
+		})
+		.catch((error) => console.log(error));
+	}
+
 	constructor(props) {
 		super(props);
 
@@ -15,6 +29,7 @@ export default class Customers extends React.Component {
 			userId: -1
 		}
 
+		this.createHandler = this.createHandler.bind(this);
 		this.closeModal = this.closeModal.bind(this);
 		this.openModal = this.openModal.bind(this);
 		this.editHandler = this.editHandler.bind(this);
@@ -22,6 +37,7 @@ export default class Customers extends React.Component {
 	}
 
 	componentDidMount() {
+		document.title = "Customers";
 		axios.get('/api/customers')
 		.then((response) => {
 			this.setState({
@@ -34,7 +50,7 @@ export default class Customers extends React.Component {
 	createHandler(data) {
 		axios.post('/api/customers', data)
 		.then((response) => {
-			location.reload();
+			this.refreshData();
 		})
 		.catch((error) => console.log(error));
 	}
@@ -42,7 +58,7 @@ export default class Customers extends React.Component {
 	editHandler(data) {
 		axios.put(`/api/customers/${this.state.userId}`, data)
 		.then((response) => {
-			location.reload();
+			this.refreshData();
 		})
 		.catch((error) => console.log(error));
 	}
@@ -50,7 +66,7 @@ export default class Customers extends React.Component {
 	removeHandler() {
 		axios.delete(`/api/customers/${this.state.userId}`)
 		.then((response) => {
-			location.reload();
+			this.refreshData();
 		})
 		.catch((error) => console.log(error));
 	}
@@ -87,7 +103,8 @@ export default class Customers extends React.Component {
 							action={this.createHandler} 
 							fields={model.map(element => {
 								return {
-									...element,
+									id: element.id,
+									title: element.title.toLowerCase(),
 									value: ''
 								}
 							})} 
